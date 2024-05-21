@@ -1,0 +1,112 @@
+.App {
+    text-align: center;
+    padding:0px;
+    margin:0px;
+  }
+  
+  .App-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }
+  
+  .file{
+    margin:0;
+    padding:0;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  
+  .App-header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .App-link {
+    color: #61dafb;
+  }
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .project-heading {
+    position: absolute;
+    top: auto;
+  }
+  
+  /* Glassy card */
+  .card {
+    background: rgba(255, 255, 255, 0.2); /* Glassy effect using rgba for transparency */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    backdrop-filter: blur(10px); /* Blur behind the element for the glassy effect */
+    padding: 20px;
+    width: 300px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .content {
+    text-align: center;
+    color: white;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  p {
+    margin: 10px 0;
+  }
+  
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  .background {
+    background-image: url('frontend.jpg'); /* Default background image */
+    background-size: 100% 100%;
+    background-position: center;
+    width:100vw;
+    height: 100vh; /* Adjust height as per your requirement */
+  }
+  
+  @media (min-width: 300px) {
+    .background {
+      background-image: url('frontend-mobile.jpg'); /* Change background for medium screens */
+    }
+  }
+  
+  @media (min-width: 720px) {
+    .background {
+      background-image: url('frontend.jpg'); /* Change background for large screens */
+    }
+  }
+  

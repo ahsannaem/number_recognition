@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" class="filepip ">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="App background">
+        <header class="App-header">
+            <div class="card">
+                <div class="content">
+                    <h2>Upload image</h2>
+                    <input type="file" accept="image/*" id="fileInput">
+                    <button id="uploadButton">Upload</button>
+                    <p id="predictionResult"></p>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            window.selectedFile = event.target.files[0];
+            console.log(window.selectedFile);
+        });
+
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            const file = window.selectedFile;
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        console.log("caught error");
+                        document.getElementById('predictionResult').innerText = 'Error: ' + data.error;
+                    } else {
+                        console.log('Upload successful:', data);
+                        console.log(data.prediction[0])
+                        document.getElementById('predictionResult').innerText = 'Predicted Digit: ' + data.prediction[0];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during upload:', error);
+                    document.getElementById('predictionResult').innerText = 'Error: ' + error;
+                });
+            } else {
+                console.log("No file selected.");
+            }
+        });
+    </script>
+</body>
+</html>
