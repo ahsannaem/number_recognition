@@ -1,60 +1,152 @@
 <!DOCTYPE html>
-<html lang="en" class="filepip ">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digit Predictor</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 24px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload {
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #1565c0;
+        }
+
+        button {
+            background-color: #43a047;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2e7d32;
+        }
+
+        #predictionResult {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="App background">
-        <header class="App-header">
-            <div class="card">
-                <div class="content">
-                    <h2>Upload image</h2>
-                    <input type="file" accept="image/*" id="fileInput">
-                    <button id="uploadButton">Upload</button>
-                    <p id="predictionResult"></p>
-                </div>
-            </div>
-        </header>
+    <div class="container">
+        <h2>Digit Predictor</h2>
+        
+        <label for="fileInput" class="custom-file-upload">Choose Image</label>
+        <input type="file" accept="image/*" id="fileInput" />
+
+        <br />
+        <button id="uploadButton">Predict</button>
+
+        <p id="predictionResult"></p>
     </div>
 
     <script>
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            window.selectedFile = event.target.files[0];
-            console.log(window.selectedFile);
+        const fileInput = document.getElementById('fileInput');
+        const predictionResult = document.getElementById('predictionResult');
+        let selectedFile = null;
+
+        fileInput.addEventListener('change', (event) => {
+            selectedFile = event.target.files[0];
+            predictionResult.innerText = '';
         });
 
-        document.getElementById('uploadButton').addEventListener('click', function() {
-            const file = window.selectedFile;
-            if (file) {
-                const formData = new FormData();
-                formData.append('file', file);
-
-                fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error(data.error);
-                        console.log("caught error");
-                        document.getElementById('predictionResult').innerText = 'Error: ' + data.error;
-                    } else {
-                        console.log('Upload successful:', data);
-                        console.log(data.prediction[0])
-                        document.getElementById('predictionResult').innerText = 'Predicted Digit: ' + data.prediction[0];
-                    }
-                })
-                .catch(error => {
-                    console.error('Error during upload:', error);
-                    document.getElementById('predictionResult').innerText = 'Error: ' + error;
-                });
-            } else {
-                console.log("No file selected.");
+        document.getElementById('uploadButton').addEventListener('click', () => {
+            if (!selectedFile) {
+                predictionResult.innerText = 'Please select an image file.';
+                return;
             }
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    predictionResult.innerText = 'Error: ' + data.error;
+                } else {
+                    predictionResult.innerText = `Predicted Digit: ${data.predicted_digit}`;
+                }
+            })
+            .catch(error => {
+                predictionResult.innerText = 'Upload failed: ' + error;
+            });
         });
     </script>
 </body>
